@@ -1,0 +1,157 @@
+--- /etc/sane.d/epson.conf	2007-10-22 20:36:09.000000000 +0200
++++ /etc/sane.d/epson.conf	2008-01-05 15:23:14.000000000 +0100
+@@ -17,7 +17,7 @@
+ # For any system with libusb support (which is pretty much any recent Linux distribution) the
+ # following line is sufficient. This however assumes that the connected scanner (or to be more
+ # accurate, it's device ID) is known to the backend. 
+-usb
++usb libusb:003:002
+ # For libusb support for unknown scanners use the following command
+ # usb <product ID> <device ID>
+ # e.g.:
+
+--- /etc/sane.d/dll.conf	2007-10-22 20:36:10.000000000 +0200
++++ /etc/sane.d/dll.conf	2008-01-05 15:01:21.000000000 +0100
+@@ -1,76 +1,76 @@
+ # enable the next line if you want to allow access through the network:
+-net
+-abaton
+-agfafocus
+-apple
+-avision
+-artec
+-artec_eplus48u
+-as6e
+-bh
+-canon
+-canon630u
++#net
++#abaton
++#agfafocus
++#apple
++#avision
++#artec
++#artec_eplus48u
++#as6e
++#bh
++#canon
++#canon630u
+ #canon_pp
+-cardscan
+-coolscan
+-coolscan2
++#cardscan
++#coolscan
++#coolscan2
+ #dc25
+ #dc210
+ #dc240
+-dell1600n_net
+-dmc
++#dell1600n_net
++#dmc
+ epson
+-epson2
+-fujitsu
++#epson2
++#fujitsu
+ #gphoto2
+-genesys
+-gt68xx
+-hp
+-hpsj5s
+-hp3500
+-hp4200
+-hp5400
+-hp5590
+-ibm
+-leo
+-lexmark
+-ma1509
+-matsushita
+-microtek
+-microtek2
+-mustek
++#genesys
++#gt68xx
++#hp
++#hpsj5s
++#hp3500
++#hp4200
++#hp5400
++#hp5590
++#ibm
++#leo
++#lexmark
++#ma1509
++#matsushita
++#microtek
++#microtek2
++#mustek
+ #mustek_pp
+-mustek_usb
+-mustek_usb2
+-nec
+-niash
+-pie
+-pint
+-pixma
+-plustek
++#mustek_usb
++#mustek_usb2
++#nec
++#niash
++#pie
++#pint
++#pixma
++#plustek
+ #plustek_pp
+ #pnm
+-qcam
+-ricoh
+-s9036
+-sceptre
+-sharp
+-sm3600
+-sm3840
+-snapscan
+-sp15c
++#qcam
++#ricoh
++#s9036
++#sceptre
++#sharp
++#sm3600
++#sm3840
++#snapscan
++#sp15c
+ #st400
+ #stv680
+-tamarack
+-teco1
+-teco2
+-teco3
++#tamarack
++#teco1
++#teco2
++#teco3
+ #test
+-u12
+-umax
++#u12
++#umax
+ #umax_pp
+-umax1220u
+-v4l
++#umax1220u
++#v4l
+ #
+ # The following backends are not included in the sane-backends distribution
+ # If you want to use them, download them from their webpages and read their
+@@ -79,5 +79,5 @@
+ # HP OfficeJet backend homepage: http://hpoj.sf.net/
+ # Uncomment the following line if hpoj is installed:
+ #hpoj
+-hp_rts88xx
++#hp_rts88xx
+ #hpaio

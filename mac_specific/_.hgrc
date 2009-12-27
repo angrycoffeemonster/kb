@@ -1,0 +1,6 @@
+[ui]
+username = Alessio Bianchi <venator85@gmail.com>
+ignore = ~/.hgignore
+
+[extensions]
+hgext.convert=

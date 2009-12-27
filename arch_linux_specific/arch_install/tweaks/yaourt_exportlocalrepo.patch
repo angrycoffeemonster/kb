@@ -1,0 +1,10 @@
+--- /usr/lib/yaourt/basicfunctions.sh	2008-12-09 17:18:33.000000000 +0100
++++ /usr/lib/yaourt/basicfunctions.sh	2008-12-09 17:18:45.000000000 +0100
+@@ -273,6 +273,6 @@
+ fi
+ 
+ loadlibrary color
+-readconfigfile `grep "^[\ ]*[a-Z]" $configfile | tr A-Z a-z`
++readconfigfile `grep "^[\ ]*[a-Z]" $configfile | awk '{ print tolower($1) " " $2 }' | sed -e s/\ [yY][eE][sS]/\ yes/g -e s/\ [nN][oO]/\ no/g`
+ initcolor
+ initpath

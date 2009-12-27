@@ -1,0 +1,13 @@
+--- /usr/share/i18n/locales/en_US	2008-01-04 15:43:19.000000000 +0100
++++ /usr/share/i18n/locales/en_US	2008-01-04 15:00:39.000000000 +0100
+@@ -135,8 +135,8 @@
+ END LC_MESSAGES
+ 
+ LC_PAPER
+-height   279
+-width    216
++height   297
++width    210
+ END LC_PAPER
+ 
+ LC_NAME

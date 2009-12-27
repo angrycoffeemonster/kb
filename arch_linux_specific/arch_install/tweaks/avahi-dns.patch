@@ -1,0 +1,12 @@
+--- /etc/nsswitch.conf	2008-04-23 10:23:30.000000000 +0200
++++ /etc/nsswitch.conf	2008-04-23 10:23:41.000000000 +0200
+@@ -6,7 +6,7 @@
+ 
+ publickey: files
+ 
+-hosts: files dns
++hosts: files dns mdns4
+ networks: files
+ 
+ protocols: db files
+

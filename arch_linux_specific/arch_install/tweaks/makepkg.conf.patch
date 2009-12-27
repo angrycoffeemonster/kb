@@ -1,0 +1,11 @@
+--- /etc/makepkg.conf	2008-02-05 14:34:26.000000000 +0100
++++ /etc/makepkg.conf	2008-02-05 14:33:40.000000000 +0100
+@@ -32,7 +32,7 @@
+ CFLAGS="-march=i686 -mtune=generic -O2 -pipe"
+ CXXFLAGS="-march=i686 -mtune=generic -O2 -pipe"
+ #-- Make Flags: change this for DistCC/SMP systems
+-#MAKEFLAGS="-j2"
++MAKEFLAGS="-j3"
+ 
+ #########################################################################
+ # BUILD ENVIRONMENT

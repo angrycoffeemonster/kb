@@ -1,0 +1,43 @@
+--- /usr/lib/network/network	2008-06-25 13:08:41.000000000 +0200
++++ /usr/lib/network/network	2008-06-28 13:47:30.000000000 +0200
+@@ -228,6 +228,20 @@
+     return 1
+ } 
+ 
++# by Venator85
++# count_active_profiles
++#   Return the number of active profiles
++#
++count_active_profiles() {
++	counter=0
++	all_profiles=$(list_profiles)
++	for profile in $all_profiles; 
++	do
++		check_profile $profile && let counter+=1
++	done
++	echo $counter
++}
++
+ ### Status setting functions
+ ##
+ # set_profile up/down profile
+--- /etc/rc.d/net-profiles	2008-06-25 13:08:42.000000000 +0200
++++ /etc/rc.d/net-profiles	2008-06-28 13:47:03.000000000 +0200
+@@ -43,8 +43,16 @@
+         fi            
+ 
+         add_daemon net-profiles
++        
++        source /usr/lib/network/network
++        STATE_DIR="/var/run/network/"
++        active_profiles=$(count_active_profiles)
++        if [[ "$active_profiles" -eq 0 ]]; then
++	        /etc/rc.d/net-auto start
++        fi
+         ;;
+     stop)
++        /etc/rc.d/net-auto stop
+         # shutdown any profiles started by netcfg (or from NET_PROFILES in rc.conf)
+         /usr/bin/netcfg2 -a
+         rm_daemon net-profiles
+

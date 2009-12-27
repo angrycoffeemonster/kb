@@ -1,0 +1,13 @@
+--- /etc/inputrc	2008-08-24 22:09:50.000000000 +0200
++++ /etc/inputrc	2008-08-24 22:10:21.000000000 +0200
+@@ -11,8 +11,8 @@
+ # for linux console and RH/Debian xterm
+ "\e[1~": beginning-of-line
+ "\e[4~": end-of-line
+-"\e[5~": beginning-of-history
+-"\e[6~": end-of-history
++"\e[5~": history-search-backward
++"\e[6~": history-search-forward
+ "\e[7~": beginning-of-line
+ "\e[3~": delete-char
+ "\e[2~": quoted-insert

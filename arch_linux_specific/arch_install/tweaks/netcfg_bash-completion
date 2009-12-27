@@ -1,0 +1,65 @@
+# netcfg2 completion by Maciej 'macieks' Sitarz <macieks@freesco.pl>
+#
+#                 MOVE TO /etc/bash_completion.d/netcfg2
+#
+
+_available_prfls ()
+{
+  COMPREPLY=( $( compgen -W "$( ls /etc/network.d/ )" -- $cur ) )
+}
+
+_connected_prfls ()
+{
+  COMPREPLY=( $( compgen -W "$( ls /var/run/network/profiles/ )" -- $cur ) )
+}
+
+_connected_intfs ()
+{
+  COMPREPLY=( $( compgen -W "$( ls /var/run/network/interfaces/)" -- $cur ) )
+}
+
+_netcfg2 ()
+{
+	local cur prev opts lopts cmds
+
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+	opts="-c -d -a -i -h -v"
+	lopts="--help --version"
+	cmds="check-iface down all-down iface-down all-resume all-suspend"
+
+	case "${cur}" in
+		--*)
+			COMPREPLY=( $( compgen -W "${lopts}" -- $cur ) )
+			return 0
+	            	;;
+	        -*)
+			COMPREPLY=( $( compgen -W "${opts} ${lopts}" -- $cur ) )
+	        	return 0
+       			;;
+       		*)
+			if [ $COMP_CWORD -eq 1 ]; then
+				COMPREPLY=( $( compgen -W "${opts} ${lopts} ${cmds} `ls /etc/network.d/`" -- $cur ) )
+        		fi
+			;;
+    	esac
+	
+	case "${prev}" in
+		-c|check-iface|-i|iface-down)
+	            	_connected_intfs
+			return 0
+	            	;;
+	        -d|down)
+			_connected_prfls
+	        	return 0
+       			;;
+       		*)
+        		;;
+    	esac
+	
+	return 0
+}
+complete -F _netcfg2 netcfg2
+
