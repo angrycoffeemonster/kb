@@ -16,5 +16,5 @@ then
 		growlnotify --image $ICON_ERROR -m "Errore durante backup mirroring ($retcode)!"
 	fi
 else
-	growlnotify --image $ICON_PROGRESS -m "Backup mirroring non eseguito: non al negozio."
+	growlnotify --image $ICON_ERROR -m "Backup mirroring non eseguito: non al negozio."
 fi
