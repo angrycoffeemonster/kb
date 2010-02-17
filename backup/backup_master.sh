@@ -44,20 +44,23 @@ filename="Backup.${BACKUP_TAG}.${filename_date}.tar.gz"
 dest_week_dir="/$(date +%Y.%U)"			# 2008.40 (anno.numerosettimana)
 ########################
 
+SSH="ssh -o PasswordAuthentication=no"
+SCP="scp -o PasswordAuthentication=no"
+
 backup_start=`date +"${start_end_date_format}"`
-slave_output=`ssh -o PasswordAuthentication=no ${REMOTE_USERNAME}@${REMOTE_HOST} "sh -c \"${BACKUP_SLAVE} ${TOBACKUP} ${REMOTE_BACKUP_DEST}/${filename}\" 2>&1"`
+slave_output=`$SSH ${REMOTE_USERNAME}@${REMOTE_HOST} "sh -c \"${BACKUP_SLAVE} ${TOBACKUP} ${REMOTE_BACKUP_DEST}/${filename}\"" 2>&1`
 backup_result=$?
 backup_end=`date +"${start_end_date_format}"`
 mkdir -p ${LOCAL_BACKUP_DEST}${dest_week_dir}/
 rm -f ${LOCAL_BACKUP_DEST}/${CURRENT_WEEK_LINK}
 ln -s ${LOCAL_BACKUP_DEST}${dest_week_dir} ${LOCAL_BACKUP_DEST}/${CURRENT_WEEK_LINK}
-scp -o PasswordAuthentication=no ${REMOTE_USERNAME}@${REMOTE_HOST}:${REMOTE_BACKUP_DEST}/${filename} ${LOCAL_BACKUP_DEST}${dest_week_dir}/
+transfer_output=`$SCP ${REMOTE_USERNAME}@${REMOTE_HOST}:${REMOTE_BACKUP_DEST}/${filename} ${LOCAL_BACKUP_DEST}${dest_week_dir}/ 2>&1`
 transfer_result=$?
 transfer_end=`date +"${start_end_date_format}"`
 
 if [ $transfer_result -eq 0 ]; then
 	# transfer succesful
-	ssh -o PasswordAuthentication=no ${REMOTE_USERNAME}@${REMOTE_HOST} rm -f ${REMOTE_BACKUP_DEST}/${filename}
+	removal_output=`$SSH ${REMOTE_USERNAME}@${REMOTE_HOST} rm -f ${REMOTE_BACKUP_DEST}/${filename} 2>&1`
 	removal_result=$?
 fi
 
@@ -67,15 +70,13 @@ if [ ${backup_result} -eq 0 -a ${transfer_result} -eq 0 ]; then
 	else
 		overall_result="OK"
 	fi
-elif [ ${backup_result} -eq 255 -o ${transfer_result} -eq 255 ]; then
-	overall_result="SSH key auth failed"
 elif [ ${backup_result} -ne 0 -o ${transfer_result} -ne 0 ]; then
 	overall_result="Errori"
 fi
 
 if [ "$1" != "--no-shutdown" ]; then
 	# Shutdown slave pc
-	ssh -o PasswordAuthentication=no ${REMOTE_USERNAME}@${REMOTE_HOST} "shutdown -s -f"
+	$SSH ${REMOTE_USERNAME}@${REMOTE_HOST} "shutdown -s -f"
 fi
 
 mailfile="/tmp/backup_log_${filename_date}"
@@ -106,8 +107,14 @@ mailfile="/tmp/backup_log_${filename_date}"
 	echo ":: Esito trasferimento:  $transfer_result"
 	echo ":: Esito rimozione:      $removal_result"
 	echo ""
-	echo ":: Output script backup_slave:"
-	echo $slave_output
+	echo ":: Output backup:"
+	echo "$slave_output"
+	echo ""
+	echo ":: Output trasferimento:"
+	echo "$transfer_output"
+	echo ""
+	echo ":: Output rimozione copia dalla macchina slave:"
+	echo "$removal_output"
 	echo ""
 	echo "--"
 	echo "$0"
