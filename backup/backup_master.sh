@@ -1,39 +1,64 @@
 #!/bin/bash
 
-# Usage:
-# backup_master [--no-shutdown]
+usage() {
+cat >&2 <<EOF
+usage: $0 -c <config_file> [-n]
+
+Backup master script
+
+OPTIONS:
+   -h      Show this message
+   -c      Configuration file
+   -n      Dont shutdown slave machine after backup
+EOF
+} 
 
 # Ensure this script is not executed by root
-if [ "$(id -u)" == 0 ]
-then
-	echo ":: Error: backup_master must not be run as root!"
-	echo ":: If you are using cron, use the following command:"
-	echo "   su -l YOUR_USER -c \"/path/to/backup_master\""
+ensurenonroot() {
+if [ "$(id -u)" == 0 ]; then
+	cat >&2 <<EOF
+:: Error: backup_master must not be run as root!"
+:: If you are using cron, use the following command:"
+   su -l YOUR_USER -c '/path/to/backup_master <options>'
+EOF
+	exit 1
+fi
+}
+
+NOSHUTDOWN=
+CONFIGFILE=
+while getopts "hc:n" OPTION
+do
+	case $OPTION in
+		h)
+			usage
+			exit
+			;;
+		c)
+			CONFIGFILE=$OPTARG
+			;;
+		n)
+			NOSHUTDOWN=1
+			;;
+		?)
+			usage
+			exit 2
+			;;
+	esac
+done
+
+if [ -n "$CONFIGFILE" ]; then
+	if [ ! -f "$CONFIGFILE" ]; then
+		echo "$0: config file doesn't exist or isn't a file"
+		exit 1
+	fi
+else
+	echo "$0: config file not specified"
+	usage
 	exit 1
 fi
 
-##### NOTIFICATION OPTIONS #####
-#
-# putmail.py is used to send notification mails
-# Configure ~/.putmail/putmailrc with SMTP server options
-#
-INSTALLATION_NAME='UtensBianchi'
-FROM_ADDR="$INSTALLATION_NAME Automatic backup <venatorstorage@gmail.com>"
-TO_ADDR='Alessio Bianchi <venator85@gmail.com>'
-################################
-
-##### BACKUP OPTIONS #####
-BACKUP_TAG='SISPAC-9.70.10'
-
-REMOTE_USERNAME='Administrator'
-REMOTE_HOST='server'
-TOBACKUP='/cygdrive/h/Sispac'
-REMOTE_BACKUP_DEST='/cygdrive/h/BackupSISPAC'
-BACKUP_SLAVE='/cygdrive/h/BackupSISPAC/backup_slave'
-
-LOCAL_BACKUP_DEST='/home/venator/backup_sispac'
-CURRENT_WEEK_LINK='curweek'
-##########################
+source "$CONFIGFILE"
 
 ##### MISC OPTIONS #####
 long_date=`date +"%a %d/%m/%Y %H.%M.%S"`	# Thu 28/08/2008 14.49.31
@@ -74,7 +99,7 @@ elif [ ${backup_result} -ne 0 -o ${transfer_result} -ne 0 ]; then
 	overall_result="Errori"
 fi
 
-if [ "$1" != "--no-shutdown" ]; then
+if [ -z "$NOSHUTDOWN" ]; then
 	# Shutdown slave pc
 	$SSH ${REMOTE_USERNAME}@${REMOTE_HOST} "shutdown -s -f"
 fi
@@ -126,4 +151,3 @@ if [ $? -eq 0 ]; then
 else
 	mv $mailfile ${LOCAL_BACKUP_DEST}/
 fi
-
