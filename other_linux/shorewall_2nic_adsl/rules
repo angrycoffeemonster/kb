@@ -1,0 +1,54 @@
+#
+# Shorewall version 4.0 - Sample Rules File for two-interface configuration.
+# Copyright (C) 2006,2007 by the Shorewall Team
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# See the file README.txt for further details.
+#------------------------------------------------------------------------------
+# For information about entries in this file, type "man shorewall-rules"
+#
+# For more information, see http://www.shorewall.net/Documentation.htm#Rules
+#
+#############################################################################################################
+#ACTION		SOURCE		DEST		PROTO	DEST	SOURCE		ORIGINAL	RATE		USER/	MARK
+#							PORT	PORT(S)		DEST		LIMIT		GROUP
+
+# Accept DNS connections from the firewall to the network
+DNS(ACCEPT)	$FW		net
+# Accept DNS connections from the local network to the firewall (caching dns server)
+DNS(ACCEPT)	loc		$FW
+
+# Accept SSH connections from local and from network 
+SSH(ACCEPT)	loc		$FW
+SSH(ACCEPT)	net		$FW
+
+# Allow Ping from local and from network
+Ping(ACCEPT)	loc		$FW
+Ping(ACCEPT)	net		$FW
+
+ACCEPT		$FW		loc		icmp
+ACCEPT		$FW		net		icmp
+
+# SSH server verso notebook alessio
+DNAT		net		loc:192.168.0.20:22	tcp	2222
+DNAT		net		loc:192.168.0.20:6890 tcp 6890
+
+# Apache
+ACCEPT		net		$FW		tcp	80
+ACCEPT		net		$FW		tcp	443
+
+# aMule
+ACCEPT		net		$FW		tcp	1755
+ACCEPT		net		$FW		udp	1756
+ACCEPT		net		$FW		udp	1758
+ACCEPT		net		$FW		tcp	4712
+
+# Bittorrent
+ACCEPT		net		$FW		tcp	6890:6899
+ACCEPT		net		$FW		tcp	9091
+ACCEPT		net		$FW		udp	6881
+
