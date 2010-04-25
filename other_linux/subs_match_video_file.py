@@ -2,7 +2,7 @@
 
 """
 Scans the current working directory or a directory passed on the command line for episodes (*.avi) and subtitles (*.srt) and renames subtitle filenames to match the corresponding episodes.
-Episode numbers are always rewritten as <season>x<episode>, and filenames are always cleaned from crew tags.
+Episode numbers are always rewritten as <season>x<episode>, spaces are always replaced with '.' and filenames are always cleaned from crew tags.
 
 Example:
 	The.Big.Bang.Theory.S01E01.Pilot.HDTV-XOR.avi
@@ -62,6 +62,7 @@ def getSeasonEpisode(f):
 						print "Couldn't extract season/episode numbers from:"
 						print f
 						return None
+	# returns (season number, episode number, season and episode number as expressed in the filename)
 	return (int(episode[0][1]), int(episode[0][2]), episode[0][0])
 
 def formatSeasonEpisode(f):
@@ -69,6 +70,7 @@ def formatSeasonEpisode(f):
 	epis = str(epis_)
 	new_seas_epis = "%dx%s" % (seas, epis.zfill(2))
 	f = f.replace(seas_epis, new_seas_epis)
+	f = f.replace(" ", ".")
 	ext = f[-4:]
 	f_clean = clean_re.sub('', f)
 	if f == f_clean:
