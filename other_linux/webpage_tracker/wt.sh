@@ -15,7 +15,7 @@
 FROM_ADDR="Webpage Tracker <venatorstorage@gmail.com>"
 TO_ADDR='Alessio Bianchi <venator85@gmail.com>'
 
-DELAY=300 #in seconds
+DELAY=600 #in seconds
 ################################
 
 while true
@@ -36,7 +36,7 @@ do
 			echo $LASTMOD_SITE >> $i
 			SITENAME="${i%.site}"
 			SUBJECT="$SUBJECT$SITENAME  "
-			BODY="$BODY$SITENAME\n$LASTMOD_SITE\n\n"
+			BODY="$BODY$SITENAME ($URL)\n$LASTMOD_SITE\n\n"
 		fi
 	done
 
