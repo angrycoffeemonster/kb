@@ -1,2 +1,0 @@
-ACTION=="add", SUBSYSTEM=="input", ID_CLASS="mouse", RUN+="/usr/bin/synclient TouchpadOff=1"
-ACTION=="remove", SUBSYSTEM=="input", ID_CLASS="mouse", RUN+="/usr/bin/synclient TouchpadOff=0"
