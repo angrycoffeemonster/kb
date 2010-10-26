@@ -23,6 +23,6 @@ case $1 in
     ;;
   *)
     echo "Usage: $0 {start|stop}"
-    return 1
+    exit 1
 esac
 

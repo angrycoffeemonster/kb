@@ -15,7 +15,7 @@
 FROM_ADDR="Webpage Tracker <venatorstorage@gmail.com>"
 TO_ADDR='Alessio Bianchi <venator85@gmail.com>'
 
-DELAY=600 #in seconds
+DELAY=3600 #in seconds
 ################################
 
 while true
@@ -23,8 +23,10 @@ do
 	BODY=""
 	SUBJECT=""
 	
+	date
 	for i in $(ls *.site)
 	do
+		echo -n "Testing $i... "
 		URL=`cat $i|grep http`
 		LASTMOD_SAVED=`cat $i|grep Modified`
 		LASTMOD_SAVED=`expr "$LASTMOD_SAVED" : '[ ]*\(.*[^ ]\)[ ]*$'`		#trim heading spaces
@@ -42,6 +44,7 @@ do
 
 	if [[ $BODY != "" ]]
 	then
+		echo -n "Modified! Sending mail... "
 		{
 			echo "From: $FROM_ADDR"
 			echo "To: $TO_ADDR"
@@ -53,9 +56,14 @@ do
 			echo ""
 			echo "--"
 			echo "$0"
-		} | putmail.py -t
+		} > /tmp/wt_mail 
+		cat /tmp/wt_mail | putmail.py -t
+		rm -f /tmp/wt_mail
+		echo "Mail sent!"
+	else
+		echo "Not modified"
 	fi
-
+	echo
 	sleep $DELAY
 done
 
