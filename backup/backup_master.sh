@@ -66,7 +66,8 @@ short_date=`date +%d/%m/%Y`			# 27/08/2008
 filename_date=`date +%Y_%m_%d-%H.%M.%S`		# 2008_08_27-22.32.47
 start_end_date_format='%d/%m/%Y %H.%M.%S'
 filename="Backup.${BACKUP_TAG}.${filename_date}.tar.gz"
-dest_week_dir="/$(date +%Y.%U)"			# 2008.40 (anno.numerosettimana)
+week=$(date +%Y.%U)				# 2008.40 (anno.numerosettimana)
+dest_week_dir="/${week}"		# /2008.40
 ########################
 
 SSH="ssh -o PasswordAuthentication=no"
@@ -104,50 +105,70 @@ if [ -z "$NOSHUTDOWN" ]; then
 	$SSH ${REMOTE_USERNAME}@${REMOTE_HOST} "shutdown -s -f"
 fi
 
-mailfile="/tmp/backup_log_${filename_date}"
-{
-	echo "From: $FROM_ADDR"
-	echo "To: $TO_ADDR"
-	echo "Subject: [Backup] ${INSTALLATION_NAME}::${BACKUP_TAG} - $overall_result"
-	echo ""
-	echo "${INSTALLATION_NAME}::${BACKUP_TAG} - Automatic backup report"
-	echo ":: Macchina slave:       ${REMOTE_USERNAME}@${REMOTE_HOST}"
-	echo ":: Directory backuppata: $TOBACKUP"
-	echo ""
-	echo ":: Directory listing della settimana corrente (${dest_week_dir}):"
-	echo -n "   "; ls -lth ${LOCAL_BACKUP_DEST}${dest_week_dir}
-	echo ""
-	echo ":: Directory di destinazione backup:"
-	echo -n "   "; du -sh ${LOCAL_BACKUP_DEST}
-	echo ""
-	echo ":: Uso del disco:"
-	df -h ${LOCAL_BACKUP_DEST}
-	echo ""
-	echo ":: Inzio backup:         $backup_start"
-	echo ":: Fine backup:          $backup_end"
-	echo ":: Fine trasferimento:   $transfer_end"
-	echo ""
-	echo ":: ESITO GLOBALE:        $overall_result"
-	echo ":: Esito backup:         $backup_result"
-	echo ":: Esito trasferimento:  $transfer_result"
-	echo ":: Esito rimozione:      $removal_result"
-	echo ""
-	echo ":: Output backup:"
-	echo "$slave_output"
-	echo ""
-	echo ":: Output trasferimento:"
-	echo "$transfer_output"
-	echo ""
-	echo ":: Output rimozione copia dalla macchina slave:"
-	echo "$removal_output"
-	echo ""
-	echo "--"
-	echo "$0"
-} > $mailfile
-
-cat $mailfile | putmail.py -t
-if [ $? -eq 0 ]; then
-	rm $mailfile
+if [ ${WEEKLY_REPORT_ONLY} -eq 1 ]; then
+	logfile="${LOCAL_BACKUP_DEST}/week_log_${week}"
+	if [ ! -f ${logfile} ]; then
+		{
+			echo "From: $FROM_ADDR"
+			echo "To: $TO_ADDR"
+			echo "Subject: [Backup] ${INSTALLATION_NAME}::${BACKUP_TAG} - Week ${week} report"
+			echo ""
+			echo "${INSTALLATION_NAME}::${BACKUP_TAG} - Automatic backup report"
+			echo ":: Macchina slave:       ${REMOTE_USERNAME}@${REMOTE_HOST}"
+			echo ":: Directory backuppata: $TOBACKUP"
+			echo ""
+			echo ":: Data                         Esito globale"
+		} >> $logfile
+	fi
+	{
+		echo "   ${long_date}      $overall_result"
+	} >> $logfile
 else
-	mv $mailfile ${LOCAL_BACKUP_DEST}/
+	mailfile="/tmp/backup_log_${filename_date}"
+	{
+		echo "From: $FROM_ADDR"
+		echo "To: $TO_ADDR"
+		echo "Subject: [Backup] ${INSTALLATION_NAME}::${BACKUP_TAG} - $overall_result"
+		echo ""
+		echo "${INSTALLATION_NAME}::${BACKUP_TAG} - Automatic backup report"
+		echo ":: Macchina slave:       ${REMOTE_USERNAME}@${REMOTE_HOST}"
+		echo ":: Directory backuppata: $TOBACKUP"
+		echo ""
+		echo ":: Directory listing della settimana corrente (${dest_week_dir}):"
+		echo -n "   "; ls -lth ${LOCAL_BACKUP_DEST}${dest_week_dir}
+		echo ""
+		echo ":: Directory di destinazione backup:"
+		echo -n "   "; du -sh ${LOCAL_BACKUP_DEST}
+		echo ""
+		echo ":: Uso del disco:"
+		df -h ${LOCAL_BACKUP_DEST}
+		echo ""
+		echo ":: Inzio backup:         $backup_start"
+		echo ":: Fine backup:          $backup_end"
+		echo ":: Fine trasferimento:   $transfer_end"
+		echo ""
+		echo ":: Esito backup:         $backup_result"
+		echo ":: Esito trasferimento:  $transfer_result"
+		echo ":: Esito rimozione:      $removal_result"
+		echo ":: ESITO GLOBALE:        $overall_result"
+		echo ""
+		echo ":: Output backup:"
+		echo "$slave_output"
+		echo ""
+		echo ":: Output trasferimento:"
+		echo "$transfer_output"
+		echo ""
+		echo ":: Output rimozione copia dalla macchina slave:"
+		echo "$removal_output"
+		echo ""
+		echo "--"
+		echo "$0"
+	} > $mailfile
+
+	cat $mailfile | putmail.py -t
+	if [ $? -eq 0 ]; then
+		rm $mailfile
+	else
+		mv $mailfile ${LOCAL_BACKUP_DEST}/
+	fi
 fi
