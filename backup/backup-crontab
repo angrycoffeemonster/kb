@@ -1,0 +1,24 @@
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+
+#man 1 crontab for acceptable formats:
+#   <minute> <hour> <day> <month> <dow> <tags and command>
+#   <@freq> <tags and command>
+
+# Backup SISPAC
+20 18 * * 1,2,3,4,5 venator /home/venator/kb/backup/backup_master.sh -c /home/venator/kb/backup/server.conf
+# Spegnimento server eseguito da backup_master
+
+# Spegnimento server giorni non di backup
+#20 18 * * 2,4,6 /usr/bin/ssh -o PasswordAuthentication=no Administrator@server "shutdown -s -f"
+
+# Report settimanale backup SISPAC
+30 9 * * 6 venator /home/venator/kb/backup/week_report.sh -c /home/venator/kb/backup/server.conf
+
+# Backup TLQ
+0 10 * * 6 venator /home/venator/kb/backup/backup_master.sh -c /home/venator/kb/backup/ufficio.conf
+# Spegnimento ufficio eseguito da backup_master
+
+# Spegnimento gateway tutti i giorni
+#00 19 * * * /sbin/halt
