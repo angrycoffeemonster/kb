@@ -5,7 +5,7 @@
 
 start() {
   stat_busy "Starting ADSL connection loop"
-  screen -d -m /home/venator/config/adsl_loop
+  tmux new-session -d -s "aliceadsl" /home/venator/config/adsl_loop
   stat_done
 }
 
