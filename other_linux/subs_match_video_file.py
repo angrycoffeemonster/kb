@@ -47,10 +47,10 @@ ep_re.append(re.compile("\D((\d{1,2})\.(\d{1,2}))\D", re.I))	# 1.02
 ep_re.append(re.compile("\D((\d)(\d{2}))\D", re.I))				# 102
 ep_re.append(re.compile("\D((\d{2})(\d{2}))\D", re.I))			# 0102
 
-video_re = re.compile("\.(?:avi|mkv)$", re.I)
+video_re = re.compile("\.(?:avi|mkv|mp4|3gp)$", re.I)
 sub_re = re.compile("\.srt$", re.I)
 
-clean_re = re.compile("(\.(?:HDTV|720p).*?)\.(?:avi|mkv|srt)$", re.I)	# removes "HDTV.XviD-BiA", "720p.HDTV.X264-DIMENSION" and such
+clean_re = re.compile("(\.(?:HDTV|720p).*?)\.(?:avi|mkv|mp4|3gp|srt)$", re.I)	# removes "HDTV.XviD-BiA", "720p.HDTV.X264-DIMENSION" and such
 
 def getSeasonEpisode(f):
 	matched = False
