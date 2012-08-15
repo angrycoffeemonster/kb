@@ -2,7 +2,7 @@
 
 while true
 do
-	PPP=`ifconfig|grep ppp`
+	PPP=`ifconfig|grep ppp0`
 	if [ $? -ne 0 ]; then
 		date
 		poff -a

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 """
 Extracts magnet links from .html files (tested with eztv.it)
