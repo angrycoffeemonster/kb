@@ -1,0 +1,11 @@
+[Unit]
+Description=Transmission Bit Torrent Daemon
+
+[Service]
+Type=forking
+User=venator
+PIDFile=/run/transmission/transmission.pid
+ExecStart=/usr/bin/transmission-daemon -g /home/venator/.config/transmission-daemon --pid-file /run/transmission/transmission.pid
+
+[Install]
+WantedBy=multi-user.target
