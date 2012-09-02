@@ -1,0 +1,6 @@
+From: xx
+To: xx
+Subject: Cron <venator@server> Prova email
+
+Testo della email
+
