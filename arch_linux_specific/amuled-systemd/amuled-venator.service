@@ -1,0 +1,12 @@
+[Unit]
+Description=aMule Daemon
+After=network.target
+
+[Service]
+User=venator
+Group=users
+ExecStart=/usr/bin/amuled
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
