@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 """
 Scans the current working directory or a directory passed on the command line for episodes (*.avi, *.mkv) and subtitles (*.srt) and renames subtitle filenames to match the corresponding episodes.
