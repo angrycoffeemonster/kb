@@ -38,7 +38,8 @@ def is_torrent_file(fname):
 if len(sys.argv) == 1:
 	print(":: Usage ")
 else:
-	for i in sys.argv:
+	args = sys.argv[1:]
+	for i in args:
 		print("processing [%s]" % (i))
 		if is_torrent_file(i):
 			add(i)
